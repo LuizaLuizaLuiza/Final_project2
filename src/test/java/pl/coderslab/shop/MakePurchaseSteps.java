@@ -2,8 +2,11 @@ package pl.coderslab.shop;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.util.concurrent.TimeUnit;
@@ -44,7 +47,7 @@ public class MakePurchaseSteps {
 
     @And("^I choose quantity$")
     public void IChooseQuantity() {
-        purchasePage.chooseQuantity("5");
+        purchasePage.chooseQuantity();
     }
 
     @And("^I add product to the cart$")
@@ -87,8 +90,14 @@ public class MakePurchaseSteps {
         purchasePage.confirmOrder();
     }
 
+    @Then("^make screenshot$")
+    public void makeScreenshot() {
+        purchasePage.takeScreenshot("order_confirmation");
+    }
+
     @And("^close browser$")
     public void closeBrowser() {
         driver.quit();
     }
+
 }

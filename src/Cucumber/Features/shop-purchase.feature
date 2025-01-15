@@ -14,5 +14,5 @@ Feature: Buy products on website
     And I choose payment method
     And I agree terms
     And I confirm order
-#    Then make screenshot
+    Then make screenshot
     And close browser

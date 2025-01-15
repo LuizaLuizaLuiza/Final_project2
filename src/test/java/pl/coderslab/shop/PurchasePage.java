@@ -1,10 +1,17 @@
 package pl.coderslab.shop;
 
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class PurchasePage {
     private static WebDriver driver;
@@ -20,6 +27,9 @@ public class PurchasePage {
 
     @FindBy(id = "quantity_wanted")
     WebElement chooseQuantityInput;
+
+    @FindBy(css = "button.bootstrap-touchspin-up")
+    WebElement quantityUpButton;
 
     @FindBy(css = "button.btn.btn-primary.add-to-cart")
     WebElement addToCartButton;
@@ -63,10 +73,13 @@ public class PurchasePage {
         select.selectByVisibleText("M");
     }
 
-    public void chooseQuantity(String quantity) {
-        chooseQuantityInput.click();
-        chooseQuantityInput.clear();
-        chooseQuantityInput.sendKeys(quantity);
+    public void chooseQuantity() {
+        int currentQuantity = Integer.parseInt(chooseQuantityInput.getAttribute("value"));
+
+        while (currentQuantity < 5) {
+            quantityUpButton.click();
+            currentQuantity = Integer.parseInt(chooseQuantityInput.getAttribute("value"));
+        }
     }
 
     public void addToCart() {
@@ -99,5 +112,18 @@ public class PurchasePage {
 
     public void confirmOrder() {
         confirmOrderButton.click();
+    }
+
+    public void takeScreenshot(String screenshotName) {
+        try {
+            File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+
+            String desktopPath = System.getProperty("user.home") + "/Desktop";
+            Path destination = Path.of(desktopPath, screenshotName + "_" + System.currentTimeMillis() + ".png");
+
+            Files.copy(screenshot.toPath(), destination);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save screenshot", e);
+        }
     }
 }
